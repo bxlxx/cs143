@@ -57,7 +57,7 @@ DARROW          =>
 LE              <=
 ASSIGN          <-
 
-NOTION          "+"|"-"|"*"|"/"|"<"|"="|">"|"."|";"|"~"|"{"|"}"|"("|")"|":"|"@"|","
+NOTION          "+"|"-"|"*"|"/"|"<"|"="|"."|";"|"~"|"{"|"}"|"("|")"|":"|"@"|","
 
 %%
 
@@ -78,7 +78,7 @@ NOTION          "+"|"-"|"*"|"/"|"<"|"="|">"|"."|";"|"~"|"{"|"}"|"("|")"|":"|"@"|
 }
 
 <COMMENTS><<EOF>> {
-    cool_yylval.error_msg = "EOF in comment";
+    yylval.error_msg = "EOF in comment";
     BEGIN INITIAL;
     return ERROR;
 }
@@ -86,7 +86,7 @@ NOTION          "+"|"-"|"*"|"/"|"<"|"="|">"|"."|";"|"~"|"{"|"}"|"("|")"|":"|"@"|
 <COMMENTS>. {}
 
 "*)" {
-    cool_yylval.error_msg = "Unmatched *)";
+    yylval.error_msg = "Unmatched *)";
     BEGIN INITIAL;
     return ERROR;
 }
@@ -189,12 +189,12 @@ NOTION          "+"|"-"|"*"|"/"|"<"|"="|">"|"."|";"|"~"|"{"|"}"|"("|")"|":"|"@"|
 }
 
 t(?:rue) {
-    cool_yylval.boolean = 1;
+    yylval.boolean = 1;
     return BOOL_CONST;
 }
 
 f(?:alse) {
-    cool_yylval.boolean = 0;
+    yylval.boolean = 0;
     return BOOL_CONST;
 }
 
@@ -276,28 +276,28 @@ f(?:alse) {
 
     output += input;
     if (output.length() >= MAX_STR_CONST) {
-        cool_yylval.error_msg = "String constant too long";
+        yylval.error_msg = "String constant too long";
         BEGIN INITIAL;
         return ERROR;
     }
 
-    cool_yylval.symbol = stringtable.add_string((char*)output.c_str());
+    yylval.symbol = stringtable.add_string((char*)output.c_str());
     BEGIN INITIAL;
     return STR_CONST;
 }
 
 [0-9]+ {
-    cool_yylval.symbol = inttable.add_string(yytext);
+    yylval.symbol = inttable.add_string(yytext);
     return INT_CONST;
 }
 
 [A-Z][a-zA-Z0-9_]* {
-    cool_yylval.symbol = idtable.add_string(yytext);
+    yylval.symbol = idtable.add_string(yytext);
     return TYPEID;
 }
 
 [a-z][a-zA-Z0-9_]* {
-    cool_yylval.symbol = idtable.add_string(yytext);
+    yylval.symbol = idtable.add_string(yytext);
     return OBJECTID;
 }
 
